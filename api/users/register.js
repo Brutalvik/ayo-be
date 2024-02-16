@@ -3,7 +3,7 @@ import users from "../../db/user"
 import bcrypt from "bcrypt"
 import {ObjectId} from "mongodb"
 import { userSchema } from "../../middleware/validation";
-import { userSchema, validateRequest } from "../../middleware/validation";}
+import { userSchema, validateRequest } from "../../middleware/validation";
 
 
 const register = express.Router();
