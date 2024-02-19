@@ -55,6 +55,7 @@ login.post("/login", async(req, res) => {
             res.status(200).json({
                 isLoggedIn: response.isLoggedIn,
                 data: {
+                    id: response.id,
                     firstName: response.firstName,
                     lastName: response.lastName,
                     email: response.email
