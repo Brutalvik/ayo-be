@@ -1,6 +1,6 @@
-import express, { json, urlencoded } from 'express';
-import cors from 'cors';
-import {logger} from "#root/middleware/logger.js"
+const express = require("express")
+const cors = require("cors")
+const logger = require("./middleware/logger")
 
 
 const app = express();
@@ -9,10 +9,12 @@ const app = express();
 app.use(cors());
 
 //body parser
-app.use(json());
-app.use(urlencoded({ extended: false}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false}));
 
 app.use(logger)
+
+app.use("/api/users", require("./api/users/register"))
 
 //listen
 const PORT = process.env.PORT || 5000;
