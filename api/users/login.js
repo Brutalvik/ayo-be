@@ -3,7 +3,6 @@ const login = express.Router();
 const users = require("../../db/user")
 const bcrypt = require("bcrypt")
 const {loginSchema} = require("../../middleware/validation")
-const SALT = 10;
 
 login.post("/login", async(req, res) => {
     const email = req.body.email
@@ -32,7 +31,13 @@ login.post("/login", async(req, res) => {
         if(response.isLoggedIn) {
             return res.status(200).send({
                 isLoggedIn: response.isLoggedIn,
-                message: `${email} is already logged in`
+                message: `${email} is already logged in`,
+                data: {
+                    id: response._id,
+                    firstName: response.firstName,
+                    lastName: response.lastName,
+                    email: response.email
+                }
             })
         }
 
@@ -55,6 +60,7 @@ login.post("/login", async(req, res) => {
             res.status(200).json({
                 isLoggedIn: response.isLoggedIn,
                 data: {
+                    id: response.id,
                     firstName: response.firstName,
                     lastName: response.lastName,
                     email: response.email
