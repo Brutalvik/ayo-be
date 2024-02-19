@@ -2,8 +2,8 @@ const express = require("express")
 const register = express.Router();
 const users = require("../../db/user")
 const bcrypt = require("bcrypt")
-const {ObjectId} = require("mongodb")
-const {userSchema} = require("../../middleware/validation")
+const {registrationSchema} = require("../../middleware/validation")
+const SALT = 10;
 
 //Register user
 register.post("/register", async(req, res) => {
@@ -15,16 +15,14 @@ register.post("/register", async(req, res) => {
         lastName: req.body.lastName,
     }
 
-  
-
-    const validation = userSchema.validate(req.body)
+    const validation = registrationSchema.validate(req.body)
     
     if(validation.error) {
         return res.status(400).json({
           isRegistered: false,
           error: validation.error.details[0].message
     })
-}
+    }
 
     try{
         const userCollection = await users();
@@ -37,25 +35,39 @@ register.post("/register", async(req, res) => {
             message: `User with email ${email} already exists`,
           });
         }
-        
-        const insertUser = await userCollection.insertOne({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: user.password
-        })
 
-        if(!insertUser) {
-            return res.status(400).json({
-                isRegistered: false,
-                message: "failed"
+        bcrypt.hash(user.password, SALT, async(error, hash) => {
+            if(error) {
+                return res.status(400).json({
+                    isRegistered: false,
+                    error: 'Password encryption failed'
+                })
+            }
+
+            const insertUser = await userCollection.insertOne({
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                password: hash
             })
-        }
-        
-        res.status(200).json({
-            message: "success",
-            data: user,
+
+            if(!insertUser) {
+                return res.status(400).json({
+                    isRegistered: false,
+                    message: "failed"
+                })
+            }
+            
+            res.status(200).json({
+                message: "success",
+                data: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
+                },
+            })
         })
+        
     } catch(error) {
         res.status(400).json({
             isRegistered:false,
