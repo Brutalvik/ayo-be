@@ -1,8 +1,11 @@
+require("dotenv")
 const express = require("express")
 const login = express.Router();
 const users = require("../../db/user")
 const bcrypt = require("bcrypt")
 const {loginSchema} = require("../../middleware/validation")
+// const jwt = require("jsonwebtoken")
+// const authenticateToken = require("../../auth/auth")
 
 login.post("/login", async(req, res) => {
     const email = req.body.email
@@ -56,11 +59,22 @@ login.post("/login", async(req, res) => {
                     error: 'Wrong password'
                 })
             }
-            
+ 
+
+            // const userPayload = {
+            //         id: response._id,
+            //         firstName: response.firstName,
+            //         lastName: response.lastName,
+            //         email: response.email
+            // }
+
+            // const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_SECRET)
+            // res.json({accessToken: accessToken})
+
             res.status(200).json({
                 isLoggedIn: response.isLoggedIn,
                 data: {
-                    id: response.id,
+                    id: response._id,
                     firstName: response.firstName,
                     lastName: response.lastName,
                     email: response.email
