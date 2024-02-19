@@ -1,7 +1,7 @@
 const client = require("./config")
 
 const users = async() => {
-    const connection = await client.connect();
+    await client.connect();
     const userCollection = client.db("Ayo").collection("users");
     return userCollection;
 
