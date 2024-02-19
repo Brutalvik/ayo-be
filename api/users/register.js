@@ -13,6 +13,8 @@ register.post("/register", async(req, res) => {
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        isLoggedIn: true,
+        isRegistered: true,
     }
 
     const validation = registrationSchema.validate(req.body)
@@ -48,7 +50,8 @@ register.post("/register", async(req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                password: hash
+                password: hash,
+                ...user
             })
 
             if(!insertUser) {
@@ -60,6 +63,7 @@ register.post("/register", async(req, res) => {
             
             res.status(200).json({
                 message: "success",
+                isRegistered: response.isRegistered,
                 data: {
                     firstName: user.firstName,
                     lastName: user.lastName,

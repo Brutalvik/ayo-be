@@ -27,7 +27,14 @@ login.post("/login", async(req, res) => {
             isLoggedIn: false,
             message: `User with email ${email} does not exist`,
           });
-        }     
+        }
+        
+        if(response.isLoggedIn) {
+            return res.status(200).send({
+                isLoggedIn: response.isLoggedIn,
+                message: `${email} is already logged in`
+            })
+        }
 
         bcrypt.compare(password, response.password, async(error, result) => {
 
@@ -46,7 +53,7 @@ login.post("/login", async(req, res) => {
             }
             
             res.status(200).json({
-                message: "success",
+                isLoggedIn: response.isLoggedIn,
                 data: {
                     firstName: response.firstName,
                     lastName: response.lastName,
