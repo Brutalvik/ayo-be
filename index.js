@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false}));
 app.use(logger)
 
 app.use("/api/users", require("./api/users/register"))
+app.use("/api/users", require("./api/users/login"))
 
 //listen
 const PORT = process.env.PORT || 5000;
