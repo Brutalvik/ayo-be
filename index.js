@@ -16,6 +16,7 @@ app.use(logger)
 app.use("/api/users", require("./api/users/register"))
 app.use("/api/users", require("./api/users/login"))
 app.use("/api/users", require("./api/users/logout"))
+app.use("/api/users", require("./api/vehicles/addVehicle"))
 
 //listen
 const PORT = process.env.PORT || 5000;
