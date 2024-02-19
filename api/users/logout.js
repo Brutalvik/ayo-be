@@ -1,6 +1,6 @@
 const express = require("express");
 const logout = express.Router();
-const users = require("../../db/users");
+const users = require("../../db/user");
 const { ObjectId } = require("mongodb");
 
 logout.post("/logout", async (req, res) => {
@@ -14,6 +14,13 @@ logout.post("/logout", async (req, res) => {
       isLoggedIn: true,
       message: `Could not logout user`,
     });
+  }
+
+  if(!response.isLoggedIn) {
+    return res.status(400).send({
+        isLoggedIn: response.isLoggedIn,
+        message: `User is not logged out`
+    })
   }
 
   const updateResponse = await usersCollection.updateOne(
